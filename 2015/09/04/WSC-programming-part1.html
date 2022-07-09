@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  
+  <!-- Favicon code from realfavicongenerator.net -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#8b51a3">
+<meta name="msapplication-TileColor" content="#563d7c">
+<meta name="theme-color" content="#ffffff">
+
+  <!--jQuery-->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.1/css/academicons.min.css" integrity="sha256-i1+4qU2G2860dGGIOJscdC30s9beBXjFfzjWLjBRsBg=" crossorigin="anonymous">
+  <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css' rel='stylesheet' type='text/css'>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/assets/css/main.css">
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Part-1 Programming models in Warehouse-Scale Computing | Grape Academic Theme</title>
+<meta name="generator" content="Jekyll v4.2.2" />
+<meta property="og:title" content="Part-1 Programming models in Warehouse-Scale Computing" />
+<meta name="author" content="Paul Yang" />
+<meta property="og:locale" content="en_GB" />
+<meta name="description" content="The demonstration page for the Grape Academic Theme, a jekyll theme for academic portfolios based on the Grape Theme." />
+<meta property="og:description" content="The demonstration page for the Grape Academic Theme, a jekyll theme for academic portfolios based on the Grape Theme." />
+<link rel="canonical" href="http://paulyang0125.github.io/2015/09/04/WSC-programming-part1.html" />
+<meta property="og:url" content="http://paulyang0125.github.io/2015/09/04/WSC-programming-part1.html" />
+<meta property="og:site_name" content="Grape Academic Theme" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2015-09-04T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Part-1 Programming models in Warehouse-Scale Computing" />
+<meta name="twitter:site" content="@chrjabs" />
+<meta name="twitter:creator" content="@Paul Yang" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Paul Yang"},"dateModified":"2015-09-04T00:00:00+08:00","datePublished":"2015-09-04T00:00:00+08:00","description":"The demonstration page for the Grape Academic Theme, a jekyll theme for academic portfolios based on the Grape Theme.","headline":"Part-1 Programming models in Warehouse-Scale Computing","mainEntityOfPage":{"@type":"WebPage","@id":"http://paulyang0125.github.io/2015/09/04/WSC-programming-part1.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://paulyang0125.github.io/assets/img/smile.png"},"name":"Paul Yang"},"url":"http://paulyang0125.github.io/2015/09/04/WSC-programming-part1.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+<!--jQuery-->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<body>
+  <div class="container">
+    
+
+<section id="header-nav">
+  <header>
+    <nav>
+      <ul>
+        
+        <!-- others -->
+        <a href="/">
+          <li class="btn-nav">Home</li>
+        </a>
+        <a href="/publications">
+          <li class="btn-nav">Publications</li>
+        </a>
+        <a href="/presentations">
+          <li class="btn-nav">Presentations</li>
+        </a>
+        
+        <a href="/blog">
+          <li class="current btn-nav">Blog</li>
+        </a>
+        <a href="/tags">
+          <li class="btn-nav">Tags</li>
+        </a>
+        
+        
+      </ul>
+    </nav>
+  </header>
+</section>
+<div id="post">
+  <section class="post-header">
+    <h1 class="title">Part-1 Programming models in Warehouse-Scale Computing</h1>
+    <p class="subtitle">Background of parallel computing (RLP/DLP)</p>
+    <p class="meta">
+      September 4, 2015
+    </p>
+  </section>
+  <section class="post-content">
+    <p><img src="/assets/img/part1.1.gif" alt="sample image" /></p>
+
+<subhead>Figure1 Problem solved by parallel computing from https://computing.llnl.gov/tutorials/parallel_comp/images/parallelProblem2.gif</subhead>
+
+<h4>PREFACE</h4>
+
+<p>In today article, we’re going to expose you the programming models in WSCs, which is the well-known MapReduce framework you may have heard of it already. The article today is divided into three parts: firstly talk about a background of parallel computing, then go over some theory part of MapReduce and lastly we goes to the core part today which is actually a hands-on in Hadoop and Spark to let you understand these two popular frameworks nowadays in WSCs – Java with Hadoop and Python with Spark.</p>
+
+<h2>1. BACKGROUND</h2>
+
+<p>As the last article mentions, today Internet service not only must have ability to handle the faults from high hardware component fault rates (any components will probably go wrong, hard drive, cooling fan, power supplies, DRAM and server itself…etc), software inherited bugs and discrepancies in latency due to using 2 layers network but also need to take advantage of the parallel and distributing computing power by WSC. After all, this is reason we create WSC to handle the evolving massive workloads from internet service.</p>
+
+<p>In term of WSC computing, it’s basically broken into two parallel computing fields: Request-Level Parallelism (RLP) and Data-Level Parallelism (DLP). Let’s start with RLP.</p>
+
+<h3>1.1 Request-Level Parallelism (RLP)</h3>
+
+<p>The prominent example for RLP is Web Search engine (e.g. Google search) which provides the search service with user-made query to look up the data like webpage and image. The popular search engine like Google or social network, such as Facebook may need to handle hundreds of thousands of requests per second from multiple types of computing devices such as laptop and cellphone via different bandwidth of the networks.</p>
+
+<p>Such requests are basically independent and informational, which means they mostly involve read operation to database but rarely involve read-write sharing or synchronization across request. Therefore, we are easier to partition our computation resource across different requests and even within a request.</p>
+
+<p>Take Google Query-severing architecture for example (see the figure2):
+Google uses multiple data replications for its index server and document server to extend its service performance and availability. Of course, Google also have a set of Web servers with load balance which biases the sharding policy to equalize the amount of work per server in order to reduce the response-time variance.</p>
+
+<p><img src="/assets/img/part1.2.png" alt="sample image" /></p>
+
+<subhead>Figure2. Google information retrieval system from UCB CS 61C: Great Ideas in Computer Architecture</subhead>
+<p><br /></p>
+
+<p>For demonstration, we simulate what typically search engine works when user makes his query to Google search engine</p>
+
+<p>First, google “Paul Yang” in the search bar, you can immediately notice 138,000,000 results in 0.38 secs.</p>
+
+<p><img src="/assets/img/part1.3.png" alt="sample image" /></p>
+
+<subhead>Figure3. Demonstrate query of paul yang in Google</subhead>
+<p><br /></p>
+
+<p>So let’s break down what happened inside:</p>
+
+<ol>
+  <li>
+    <p>When you key in “Paul Yang” in your browser, the http request goes to the closest Google WSC based on DNS server</p>
+  </li>
+  <li>
+    <p>Front-end load balancer directs request to one of many arrays (cluster of severs) within WSC</p>
+  </li>
+  <li>
+    <p>Within array, select one of many Goggle Web Servers(GWS) to handle the request and compose the response pages</p>
+  </li>
+  <li>
+    <p>GWS communicates with Index Servers to find documents that contains the search words, “Paul”, “Yang”</p>
+  </li>
+  <li>
+    <p>The index server returns document list with associated relevance score</p>
+  </li>
+  <li>
+    <p>In parallel, Google Adwords system runs auction for bidders on search terms and WSC also gets other relevant data like image and videos of Paul Yang</p>
+  </li>
+  <li>
+    <p>Use docids (Document IDs) to access indexed documents</p>
+  </li>
+  <li>
+    <p>Compose the result page you’re seeing in Google.</p>
+
+    <ul>
+      <li>
+        <p>Result document extracts (with keyword in context) ordered by relevance score (here the well-known PageRank algorithm works by counting the number and quality of links to a page to determine a rough estimate of how important the website is. The underlying assumption is that more important websites are likely to receive more links from other websites [2] ).</p>
+      </li>
+      <li>
+        <p>Sponsored links (along the top) and advertisements (along the sides) are composed.</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<p><br /></p>
+
+<p>Based on the processes above, you can see that implementation of Request-Level Parallelism for WSC is to make use of three strategies - Randomly distribute the entries, Make many copies of data (a.k.a. “replicas” for index and document server) and Load balance requests across replicas, all components combined to fulfill RLP in WSCs.</p>
+
+<p><br /></p>
+
+<p>In addition, when seeing into the replication technique in this application, we can see Redundant copies of indices and documents not only help to breaks up search hot spots, e.g. “Taylor Swift” to increases opportunities for request-level parallelism but also makes the system more tolerant of failures which means even one node of index and doc sever fails, the request can be processed by other replicas.</p>
+
+<h3>1.2 Data-Level Parallelism (DLP)</h3>
+
+<p>When talking about DLP, I guess many folks should think of SIMD instruction in Figure4, such as SSE by Intel or 3DNow by AMD [1] inside CPU and GPU processor to supports data-level parallelism in a single machine. The common example to use SIMD is to do a lot matrix multiplication in memory.</p>
+
+<p><img src="/assets/img/part1.4.png" alt="sample image" /></p>
+
+<subhead>Figure4. Ordinary CPU vs. SIMD CPU from https://en.wikipedia.org/wiki/SIMD</subhead>
+<p><br /></p>
+
+<p>However, DLP in WSCs actually supports data-level parallelism across multiple machines with MapReduce as the programming model and interface and scalable file systems like GFS for dynamic distribution. The figure shows when you want to train the machine learning algorithm - Convolutional neural networks (CNNs [6] ) with images across multiple disks, which can be achieved by using MapReduce in WSC.</p>
+
+<p><img src="/assets/img/part1.5.png" alt="sample image" /></p>
+
+<subhead>Figure5. Convolutional neural networks http://www.robots.ox.ac.uk/~vgg/practicals/cnn/images/cover.png</subhead>
+
+<p><br /></p>
+
+<p>So let’s start our core topic – MapReduce. It’s basically a simple data-parallel programming model and implementation for processing large dataset. Users specify the computation regarding a map function and a reduce function but its underlying runtime system is actually processing the complex tasks as following</p>
+
+<ul>
+  <li>Automatically parallelize the computation across large scale clusters of machines.</li>
+  <li>Handles machine failure</li>
+  <li>Schedule inter-machine communication to make efficient use of the networks</li>
+</ul>
+
+<p><br /></p>
+
+<p>You can treat the system underlying MapReduce like Hadoop is OS for cluster-level for resource management and computing task scheduling and MapReduce is pretty like the abstraction model like System V API used to simplify the programming effort and hide all the internal complexity. In addition, such cluster-level OS basically is able to be scalable to large volumes of data and run on large clusters of commodity hardware, so it can be very cost-efficient and suited for WSCs.</p>
+
+<p><br /></p>
+
+<p>Let’s see the several examples that what the big internet companies use MapReduce for.</p>
+
+<p>At Google</p>
+
+<ul>
+  <li>Index construction for Google Search in Figure</li>
+  <li>Article clustering for Google News</li>
+  <li>Statistical machine translation</li>
+  <li>For computing multi-layers street maps in Figure</li>
+</ul>
+
+<p><img src="/assets/img/part1.6.jpg" alt="sample image" /></p>
+<subhead>Figure6. Constructing the index for hundreds of thousands of pages from http://searchengineland.com/figz/wp-content/seloads/2015/04/links-graph-web-pages-22-1920-800x450.jpg</subhead>
+<p><br /></p>
+
+<p><img src="/assets/img/part1.7.jpg" alt="sample image" /></p>
+
+<subhead>Figure7. Map tile processing from http://www.cubewerx.com</subhead>
+<p><br /></p>
+
+<p>At Yahoo</p>
+
+<ul>
+  <li>“Web map” powering Yahoo! Search</li>
+  <li>Spam detection for Yahoo! Mail using machine learning, such as Naïve Bayes classifier [3][4] in filtering.</li>
+</ul>
+
+<p><img src="/assets/img/part1.8.png" alt="sample image" /></p>
+
+<p>Figure8. Spam detection from http://www.slideshare.net/pi3ch/evaluation-of-spam-detection-and-prevention-frameworks-for-email-and-image-spam-a-state-of-art</p>
+
+<p><br /></p>
+
+<p>At Facebook</p>
+
+<ul>
+  <li>Data mining in Figure</li>
+  <li>Ad optimization [5]</li>
+  <li>Spam detection</li>
+</ul>
+
+<p><br /></p>
+
+<p>From Facebook lexicon, you can observe the pattern of the keywords, for example, Figure points out that people used to have frequent party and hangover in late Oct and late Dec in 2007, which basically reflects people situations in holidays and can be used for prediction data for merchandiser to better manage the distribution of the relevant goods.</p>
+
+<p><img src="/assets/img/part1.9.png" alt="sample image" /></p>
+
+<p>Figure9. Facebook Lexicon from www.facebook.com/lexicon</p>
+
+<p><br /></p>
+
+<h4>REFERENCE</h4>
+
+<p>[1] Intel AMD 3DNow! Instructions https://en.wikipedia.org/wiki/3DNow! ;</p>
+
+<p>[1] The Intel Intrinsics Guide for Intel SSE, AVX, AVX-512, and more https://software.intel.com/sites/landingpage/IntrinsicsGuide/</p>
+
+<p>[2] “Facts about Google and Competition”. Archived from the original on 4 November 2011. Retrieved12 July 2014.</p>
+
+<p>[3] Naive Bayes classifiers, https://en.wikipedia.org/wiki/Naive_Bayes_classifier</p>
+
+<p>[4] Konstantin Tretyakov , Machine Learning Techniques in Spam Filtering http://ats.cs.ut.ee/u/kt/hw/spam/spam.pdf</p>
+
+<p>[5] Facebook turns user tracking ‘bug’ into data mining ‘feature’ for advertisers
+http://www.zdnet.com/article/facebook-turns-user-tracking-bug-into-data-mining-feature-for-advertisers/</p>
+
+<p>[6] UFLDL Tutorial Convolutional Neural Network, http://ufldl.stanford.edu/tutorial/supervised/ConvolutionalNeuralNetwork/</p>
+
+  </section>
+</div>
+
+<div id="top" class="top-btn" onclick="moveTop()">
+  <i class="fas fa-chevron-up"></i>
+</div>
+
+<script>
+  var lastScrollTop = 0;
+  window.onscroll = function () {
+    var st = document.body.scrollTop || document.documentElement.scrollTop;
+    if (st > 250) {
+      document.getElementById("top").style.display = "block"
+      if (st > lastScrollTop) {
+        document.getElementById("top").style.opacity = 0
+      } else {
+        document.getElementById("top").style.opacity = 1
+      }
+    } else {
+      document.getElementById("top").style.opacity = 0
+      if (st > lastScrollTop) {
+        document.getElementById("top").style.display = "none"
+      }
+    }
+    lastScrollTop = st <= 0 ? 0 : st;
+  }
+  function moveTop() {
+    document.body.scrollTop = 0
+    document.documentElement.scrollTop = 0
+  }
+</script>
+
+<!-- Footer -->
+<footer>
+  <div class="footer">
+    Copyright © 2022
+    <a href=""></a>.
+    Powered by Jekyll with
+    <a href="https://github.com/chrjabs/Grape-Academic-Theme">Grape Academic Theme</a>.
+  </div>
+</footer>
+
+  </div>
+</body>
+
+</html>

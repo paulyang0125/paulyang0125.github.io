@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  
+  <!-- Favicon code from realfavicongenerator.net -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#8b51a3">
+<meta name="msapplication-TileColor" content="#563d7c">
+<meta name="theme-color" content="#ffffff">
+
+  <!--jQuery-->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.1/css/academicons.min.css" integrity="sha256-i1+4qU2G2860dGGIOJscdC30s9beBXjFfzjWLjBRsBg=" crossorigin="anonymous">
+  <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css' rel='stylesheet' type='text/css'>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/assets/css/main.css">
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Part-2 Programming models in Warehouse-Scale Computing | Grape Academic Theme</title>
+<meta name="generator" content="Jekyll v4.2.2" />
+<meta property="og:title" content="Part-2 Programming models in Warehouse-Scale Computing" />
+<meta name="author" content="Paul Yang" />
+<meta property="og:locale" content="en_GB" />
+<meta name="description" content="The demonstration page for the Grape Academic Theme, a jekyll theme for academic portfolios based on the Grape Theme." />
+<meta property="og:description" content="The demonstration page for the Grape Academic Theme, a jekyll theme for academic portfolios based on the Grape Theme." />
+<link rel="canonical" href="http://paulyang0125.github.io/2015/09/05/WSC-programming-part2.html" />
+<meta property="og:url" content="http://paulyang0125.github.io/2015/09/05/WSC-programming-part2.html" />
+<meta property="og:site_name" content="Grape Academic Theme" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2015-09-05T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Part-2 Programming models in Warehouse-Scale Computing" />
+<meta name="twitter:site" content="@chrjabs" />
+<meta name="twitter:creator" content="@Paul Yang" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Paul Yang"},"dateModified":"2015-09-05T00:00:00+08:00","datePublished":"2015-09-05T00:00:00+08:00","description":"The demonstration page for the Grape Academic Theme, a jekyll theme for academic portfolios based on the Grape Theme.","headline":"Part-2 Programming models in Warehouse-Scale Computing","mainEntityOfPage":{"@type":"WebPage","@id":"http://paulyang0125.github.io/2015/09/05/WSC-programming-part2.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://paulyang0125.github.io/assets/img/smile.png"},"name":"Paul Yang"},"url":"http://paulyang0125.github.io/2015/09/05/WSC-programming-part2.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+<!--jQuery-->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<body>
+  <div class="container">
+    
+
+<section id="header-nav">
+  <header>
+    <nav>
+      <ul>
+        
+        <!-- others -->
+        <a href="/">
+          <li class="btn-nav">Home</li>
+        </a>
+        <a href="/publications">
+          <li class="btn-nav">Publications</li>
+        </a>
+        <a href="/presentations">
+          <li class="btn-nav">Presentations</li>
+        </a>
+        
+        <a href="/blog">
+          <li class="current btn-nav">Blog</li>
+        </a>
+        <a href="/tags">
+          <li class="btn-nav">Tags</li>
+        </a>
+        
+        
+      </ul>
+    </nav>
+  </header>
+</section>
+<div id="post">
+  <section class="post-header">
+    <h1 class="title">Part-2 Programming models in Warehouse-Scale Computing</h1>
+    <p class="subtitle">Explain MapReduce model using Python map and reduce</p>
+    <p class="meta">
+      September 5, 2015
+    </p>
+  </section>
+  <section class="post-content">
+    <p><img src="/assets/img/part2.1.png" alt="sample image" /></p>
+
+<p>Figure1 MapReduce Overview from https://developers.google.com/appengine/docs/python/images/mapreduce_mapshuffle.png</p>
+
+<p><br /></p>
+
+<h4>PREFACE</h4>
+
+<p>Let’s continue our previous discussion. Today, we talk about MapReduce framework what/how the underlying mechanisms work when you use Java with Hadoop.</p>
+
+<h2>2. MapReduce</h2>
+
+<p>n fact, MapReduce concept is not new –it is actually inspired by the map and reduce functions commonly used in functional programming [1] although their purpose in the MapReduce framework is not the same as in their original forms.[2] The key contributions of the MapReduce framework are not the actual map and reduce functions, but the scalability and fault-tolerance achieved for a variety of applications by optimizing the execution engine once.</p>
+
+<p>However, by understanding the original form of the map and reduce functions, you can catch it the whole idea much faster. Let’s start with Python’s map and reduce function to get you warm up.</p>
+
+<p>If you’re familiar with Python, you must know about map() function that performs some operation on each element of an iterable (the following Python tutorial extracted from [3][4]). It returns a list containing the result of those operations. Here is the general form:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c1"># f is a function that takes one argument and returns a value.
+# S is any iterable.
+</span><span class="nb">map</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span></code></pre></figure>
+
+<p><br /></p>
+
+<p>Let’s see an example.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">abc</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+<span class="p">...</span>     <span class="k">return</span> <span class="n">a</span><span class="o">*</span><span class="mi">10000</span> <span class="o">+</span> <span class="n">b</span><span class="o">*</span><span class="mi">100</span> <span class="o">+</span> <span class="n">c</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">map</span><span class="p">(</span><span class="n">abc</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="p">[</span><span class="mi">10407</span><span class="p">,</span> <span class="mi">20508</span><span class="p">,</span> <span class="mi">30609</span><span class="p">]</span></code></pre></figure>
+
+<ol>
+  <li>
+    <p>Define a function abc to put a, b and c into a equation.</p>
+  </li>
+  <li>
+    <p>Use map() to apply abc() with multiple arguments - 3 turtles of a set of sequence.</p>
+  </li>
+</ol>
+
+<p><br /></p>
+
+<p>Now you know about the usage of <code class="language-plaintext highlighter-rouge">map()</code>, let’s start with reduce() in python. The function reduce()continually applies the function <code class="language-plaintext highlighter-rouge">func()</code> to the sequence seq. It returns a single value.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="nb">reduce</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">seq</span><span class="p">)</span>
+<span class="c1">#  f is a function that takes one argument and returns a value.
+#  seq is a list of sequence</span></code></pre></figure>
+
+<p>so If <code class="language-plaintext highlighter-rouge">seq = [ s1, s2, s3, ... , sn ]</code>, calling reduce(func, seq) works like this:</p>
+
+<p>At first the first two elements of seq will be applied to func, i.e. func(s1,s2)
+The list on which <code class="language-plaintext highlighter-rouge">reduce()</code> works looks now like this: [ func(s1,s2), s3, … , sn ]</p>
+
+<p>In the next step func will be applied on the previous result and the third element of the list,
+     i.e. <code class="language-plaintext highlighter-rouge">func(func(s1, s2),s3)</code> The list looks like this now: [ func(func(s1, s2),s3),… , sn ]</p>
+
+<p>Continue like this until just one element is left and return this element as the result of
+     <code class="language-plaintext highlighter-rouge">reduce()</code></p>
+
+<p><br /></p>
+
+<p>Let’s see the example that apply lambda function to simply make x + y and
+the illustration of reduce process in the figure below.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="mi">47</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">42</span><span class="p">,</span><span class="mi">13</span><span class="p">])</span>
+<span class="mi">113</span></code></pre></figure>
+
+<p><img src="/assets/img/part2.2.png" alt="sample image" /></p>
+
+<p>Figure2 breakdown of the steps of the calculation from http://www.python course.eu/images/reduce_diagram.png</p>
+
+<p><br /></p>
+
+<p>It’s time to put Python map and reduce together</p>
+
+<p>Let’s calculate:</p>
+
+<p><img src="/assets/img/part2.3.png" alt="sample image" /></p>
+
+<p><br /></p>
+
+<p>Here is our code to apply map to do square operation to each element of the iterable and finally apply reduce to continually perform sum operation to return the a value.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+               <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+<span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+               <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<span class="nb">reduce</span><span class="p">(</span><span class="nb">sum</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">square</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span></code></pre></figure>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/gNF5MEJEpYA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+
+<p>Video breakdown of the steps of the calculation</p>
+
+<p><br /></p>
+
+<p>Okay, you guess you guys should catch the idea a little bit. Let’s go the real MapReduce programming model in WSCs.</p>
+
+<p><br /></p>
+
+<p>So let’s recall what WSCs are composed of, yeah, physically, you’ve got a collection of 10,000 to 100,000 severs or even more and networks (Ethernet or even costly InfiniBand) connects them together. Okay, the question is how you have multiple servers work together to process, let’s say, 100GB workload of dataset. MapReduce programming model is basically to make these physical 10,000 servers as one Single gigantic machine from programmer‘s viewpoint. So you can run very large applications (Internet service) such as web search, email, video sharing and social networking.</p>
+
+<p><br /></p>
+
+<p>Let’s start from programmer perspective in MapReduce execution.
+At the beginning, you basically will have a dataset and then you may use Jave to make a class that extends hadoop mapper class. Next, the programmers can put their code in two phases – Map and Reduce (In Java, put your work on your defined map and reduce function).</p>
+
+<p><br /></p>
+
+<p>In Map phase where basically slices your dataset into “shards” or “splits” and distribute to workers (will talk about later) and then compute set of intermediate key/value pairs</p>
+
+<p><code class="language-plaintext highlighter-rouge">Map: (in_key, in_value) --&gt; list(interm_key, interm_val)</code></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="nb">map</span><span class="p">(</span><span class="n">in_key</span><span class="p">,</span> <span class="n">in_val</span><span class="p">):</span>
+<span class="o">//</span> <span class="n">DO</span> <span class="n">WORK</span> <span class="n">HERE</span>
+ <span class="n">emit</span><span class="p">(</span><span class="n">interm_key</span><span class="p">,</span><span class="n">interm_val</span><span class="p">)</span></code></pre></figure>
+
+<p>In Reduce phase where combines all intermediate values for a particular key and produces a set of merged output values (usually just one)</p>
+
+<p><code class="language-plaintext highlighter-rouge">Reduce: (interm_key, list(interm_value)) --&gt; list(out_value)</code></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="nb">reduce</span><span class="p">(</span><span class="n">interm_key</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">interm_val</span><span class="p">)):</span>
+  <span class="o">//</span> <span class="n">DO</span> <span class="n">WORK</span> <span class="n">HERE</span>
+  <span class="n">emit</span><span class="p">(</span><span class="n">out_key</span><span class="p">,</span> <span class="n">out_val</span><span class="p">)</span></code></pre></figure>
+
+<p>We use the example of wordcount to explain. Doc content is a the dataset and in Map phase we want to split each word from the document</p>
+
+<p><code class="language-plaintext highlighter-rouge">Map phase: (doc name, doc contents) --&gt; list(word, count)</code></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="nb">map</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">each</span> <span class="n">word</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="n">emit</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></code></pre></figure>
+
+<p>so if the content is “ I do I learn”, the above code will output the list like  <code class="language-plaintext highlighter-rouge">[(“I”,1),(“do”,1),(“I”,1),(“learn”,1)]</code></p>
+
+<p>In Reduce phase, we want to know the total count of each word, the arguments will contain a key, which is a single word and a list of the counts.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Reduce phase: (word, list(count)) --&gt; (word, count_sum)</code></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="nb">reduce</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">each</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="n">v</span>
+        <span class="n">emit</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span></code></pre></figure>
+
+<p>The result is like <code class="language-plaintext highlighter-rouge">(“I”, [1,1]) --&gt; (“I”,2)</code>
+Let’s see the underlying implementation of MapReduce framework.</p>
+
+<p><img src="/assets/img/part2.5.png" alt="sample image" /></p>
+
+<p>Figure4 Execution overview from [1]</p>
+
+<p><br /></p>
+
+<p>Let’s break the execution down based on overall flow from [1]:</p>
+
+<ol>
+  <li>
+    <p>The MapReduce library in the user program first splits the input files into M pieces of typically 16 megabytes to 64 megabytes (MB) per piece (controllable by the user via an optional parameter). It then starts up many copies of the program on a cluster of machines.</p>
+  </li>
+  <li>
+    <p>One of the copies of the program is special – the master. The rest are workers that are assigned work by the master. There are M map tasks and R reduce tasks to assign. The master picks idle workers and assigns each one a map task or a reduce task.</p>
+  </li>
+  <li>
+    <p>A worker who is assigned a map task reads the contents of the corresponding input split. It parses key/value pairs out of the input data and passes each pair to the user-defined Map function. The intermediate key/value pairs produced by the Map function are buffered in memory.</p>
+  </li>
+  <li>
+    <p>Periodically, the buffered pairs are written to local disk, partitioned into R regions by the partitioning function. The locations of these buffered pairs on the local disk are passed back to the master, who is responsible for forwarding these locations to the reduce workers.</p>
+  </li>
+  <li>
+    <p>When a reduce worker is notified by the master about these locations, it uses remote procedure calls to read the buffered data from the local disks of the map workers. When a reduce worker has read all intermediate data, it sorts it by the intermediate keys so that all occurrences of the same key are grouped together. The sorting is needed because typically many different keys map to the same reduce task. If the amount of intermediate data is too large to fit in memory, an external sort is used</p>
+  </li>
+  <li>
+    <p>The reduce worker iterates over the sorted intermediate data and for each unique intermediate key encountered, it passes the key and the corresponding set of intermediate values to the user’s Reduce function. The output of the Reduce function is appended to a final output file for this reduce partition.</p>
+  </li>
+</ol>
+
+<p><br /></p>
+
+<p>We use the illustration in Figure to animate the process (simplified version).</p>
+
+<p><br /></p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/iZ46A04ewjo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+
+<p>Video1 the execution flow in video from UCB CS 61C: Great Ideas in Computer Architecture.</p>
+
+<p><br /></p>
+
+<p>One thing we need to highlight is the actual duration of the whole tasks is not only execution time of map and reduce tasks assigned to each worker server but also you must count the time of the central role of master to coordinate workers by scheduling the idle worker and notifying them during the transition and the time for data shuffle and data fetch to local HDD.</p>
+
+<p>The figure below points out:</p>
+<ul>
+  <li>Master assigns map + reduce tasks to “worker” servers</li>
+  <li>As soon as a map task finishes, worker server can be assigned a new map or reduce task</li>
+  <li>Data shuffle begins as soon as a given Map finishes</li>
+  <li>Reduce task begins as soon as all data shuffles finish</li>
+  <li>To tolerate faults, reassign task if a worker server “dies”</li>
+  <li>Actual worker time depends on the slowest worker to finish its task.</li>
+</ul>
+
+<p><img src="/assets/img/part2.7.png" alt="sample image" /></p>
+
+<p>Figure6 the breakdown of the execution time from</p>
+
+<p>Before we finish the tutorial today, we steal a look at some Java and Python example codes that we’re going to elaborate in next article for hands-on of Hadoop and Spark with grimace
+The figure actually shows wordcount example implemented by Java in Hadoop, okay you see you need to put a lot of code to finish just one thing.</p>
+
+<p><img src="/assets/img/part2.8.jpg" alt="sample image" /></p>
+
+<p>Figure7 WC example in Java</p>
+
+<p><br /></p>
+
+<p>Let’s see another example by Spark Python API. It looks shorter and simpler, right.</p>
+
+<p><img src="/assets/img/part2.9.png" alt="sample image" /></p>
+
+<p>Figure8 WC example in Python</p>
+
+<p>We’re going to end here. But in next article – Part 3 Java in Hadoop and Python in Spark, we’ll use the more codes to let you practice what they actually work.</p>
+
+<h4>REFERENCE</h4>
+
+<p>[1] “Our abstraction is inspired by the map and reduce primitives present in Lisp and many other functional languages.” -“MapReduce: Simplified Data Processing on Large Clusters”, by Jeffrey Dean and Sanjay Ghemawat; from Google Research</p>
+
+<p>[2] Lämmel, R. (2008). “Google’s Map Reduce programming model — Revisited”. Science of Computer Programming 70: 1.doi:10.1016/j.scico.2007.07.001.</p>
+
+<p>[3] Python 2.7 quick reference https://infohost.nmt.edu/tcc/help/pubs/python/web/map-function.html</p>
+
+<p>[4] Python tutorial - Lambda, filter, reduce and map, http://www.python-course.eu/lambda.php</p>
+
+
+  </section>
+</div>
+
+<div id="top" class="top-btn" onclick="moveTop()">
+  <i class="fas fa-chevron-up"></i>
+</div>
+
+<script>
+  var lastScrollTop = 0;
+  window.onscroll = function () {
+    var st = document.body.scrollTop || document.documentElement.scrollTop;
+    if (st > 250) {
+      document.getElementById("top").style.display = "block"
+      if (st > lastScrollTop) {
+        document.getElementById("top").style.opacity = 0
+      } else {
+        document.getElementById("top").style.opacity = 1
+      }
+    } else {
+      document.getElementById("top").style.opacity = 0
+      if (st > lastScrollTop) {
+        document.getElementById("top").style.display = "none"
+      }
+    }
+    lastScrollTop = st <= 0 ? 0 : st;
+  }
+  function moveTop() {
+    document.body.scrollTop = 0
+    document.documentElement.scrollTop = 0
+  }
+</script>
+
+<!-- Footer -->
+<footer>
+  <div class="footer">
+    Copyright © 2022
+    <a href=""></a>.
+    Powered by Jekyll with
+    <a href="https://github.com/chrjabs/Grape-Academic-Theme">Grape Academic Theme</a>.
+  </div>
+</footer>
+
+  </div>
+</body>
+
+</html>

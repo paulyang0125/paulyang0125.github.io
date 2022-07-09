@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  
+  <!-- Favicon code from realfavicongenerator.net -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#8b51a3">
+<meta name="msapplication-TileColor" content="#563d7c">
+<meta name="theme-color" content="#ffffff">
+
+  <!--jQuery-->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.1/css/academicons.min.css" integrity="sha256-i1+4qU2G2860dGGIOJscdC30s9beBXjFfzjWLjBRsBg=" crossorigin="anonymous">
+  <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css' rel='stylesheet' type='text/css'>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/assets/css/main.css">
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Part-3 Programming models in Warehouse-Scale Computing | Grape Academic Theme</title>
+<meta name="generator" content="Jekyll v4.2.2" />
+<meta property="og:title" content="Part-3 Programming models in Warehouse-Scale Computing" />
+<meta name="author" content="Paul Yang" />
+<meta property="og:locale" content="en_GB" />
+<meta name="description" content="The demonstration page for the Grape Academic Theme, a jekyll theme for academic portfolios based on the Grape Theme." />
+<meta property="og:description" content="The demonstration page for the Grape Academic Theme, a jekyll theme for academic portfolios based on the Grape Theme." />
+<link rel="canonical" href="http://paulyang0125.github.io/2015/09/06/WSC-programming-part3.html" />
+<meta property="og:url" content="http://paulyang0125.github.io/2015/09/06/WSC-programming-part3.html" />
+<meta property="og:site_name" content="Grape Academic Theme" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2015-09-06T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Part-3 Programming models in Warehouse-Scale Computing" />
+<meta name="twitter:site" content="@chrjabs" />
+<meta name="twitter:creator" content="@Paul Yang" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Paul Yang"},"dateModified":"2015-09-06T00:00:00+08:00","datePublished":"2015-09-06T00:00:00+08:00","description":"The demonstration page for the Grape Academic Theme, a jekyll theme for academic portfolios based on the Grape Theme.","headline":"Part-3 Programming models in Warehouse-Scale Computing","mainEntityOfPage":{"@type":"WebPage","@id":"http://paulyang0125.github.io/2015/09/06/WSC-programming-part3.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://paulyang0125.github.io/assets/img/smile.png"},"name":"Paul Yang"},"url":"http://paulyang0125.github.io/2015/09/06/WSC-programming-part3.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+<!--jQuery-->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<body>
+  <div class="container">
+    
+
+<section id="header-nav">
+  <header>
+    <nav>
+      <ul>
+        
+        <!-- others -->
+        <a href="/">
+          <li class="btn-nav">Home</li>
+        </a>
+        <a href="/publications">
+          <li class="btn-nav">Publications</li>
+        </a>
+        <a href="/presentations">
+          <li class="btn-nav">Presentations</li>
+        </a>
+        
+        <a href="/blog">
+          <li class="current btn-nav">Blog</li>
+        </a>
+        <a href="/tags">
+          <li class="btn-nav">Tags</li>
+        </a>
+        
+        
+      </ul>
+    </nav>
+  </header>
+</section>
+<div id="post">
+  <section class="post-header">
+    <h1 class="title">Part-3 Programming models in Warehouse-Scale Computing</h1>
+    <p class="subtitle">Programming hadoop MapReduce in Java and Spark in Python</p>
+    <p class="meta">
+      September 6, 2015
+    </p>
+  </section>
+  <section class="post-content">
+    <p><img src="/assets/img/part3.1.png" alt="sample image" /></p>
+
+<p>Figure1 Spark &amp; Python from http://static1.squarespace.com/static/538cea80e4b00f1fad490c1b/t/54b6b348e4b0a14bf3ec8b98/1421259603601/fast_data_apps.jpg</p>
+
+<p><br /></p>
+
+<h4>PREFACE</h4>
+
+<p>The goals of the articles today are to get you hands-on experience running MapReduce and gain a deeper understanding of the MapReduce paradigm, become more familiar with Apache Spark and get hands on experience with running Spark on a local installation and also learn how to apply the MapReduce paradigm to Spark by implementing certain problems/algorithms in Spark.</p>
+
+<h2>3.1 Quick Background</h2>
+
+<p>Apache Hadoop is an Open-source MapReduce Framework and also implements its own Hadoop Distributed File System (HDFS), both inspired by Google papers on their MapReduce and Google File System. For programming interface, Hadoop supports MapReduce Java APIs but it also has a big ecosystems (see Figure3 ), in which many other companies develop extensions, tools and higher-level programming platform to extend Apache Hadoop,</p>
+
+<p>For example, you can also use other scripting languages like Python, JavaScript, Ruby or Groovy to control by the syntax similar to that of SQL for RDBMS systems through Apache Pig [1] developed by Yahoo.</p>
+
+<p><br /></p>
+
+<p><img src="/assets/img/part3.2.png" alt="sample image" /></p>
+
+<p>Figure2 Apache Hadoop from https://i2.wp.com/hadoop.nl/hadoopelephant_rgb.png</p>
+
+<p><img src="/assets/img/part3.3.jpg" alt="sample image" /></p>
+
+<p>Figure3 Hadoop ecosystems from http://techblog.baghel.com/media/1/20130616-HadoopEcosystem.JPG</p>
+
+<p><br /></p>
+
+<p>Despite the popularity of Hadoop, it has several disadvantages, for example, it doesn’t fit for small data and is vulnerable by nature due to its development language in Java. Therefore, when comes to big data, Hadoop may not the only answer. Apache Spark originally developed in the AMP lab at UC Berkeley is another choose offering fast and general engine for large-scale data processing, running on HDFS and providing Java, Scala, Python APIs for Database, Machine learning and Graph algorithm.</p>
+
+<h2>3.2 Setup Hadoop and Spark</h2>
+
+<p>Of course, environment setup sometime is really troublesome and time-consuming depending on your OS environments. So the fastest way to setup is to just use Amazon AWS EC2 but it’s also the most costly option. For practice purpose, installing them on local seems the most economical way you can do. However, notice both frameworks are in fact designed for running on cluster-level machines and processing a large-scale of data so you won’t expect the performance from distributing system and they could run much slower than local software to process the dataset when you install them as standalone mode.</p>
+
+<p>As the focus today is to practice with the actual codes, to save the pages, I only leave the links below for setup depending on your local OS.</p>
+
+<ul>
+  <li>
+    <p>Hadoop on Mac, Linux and Windows:
+http://wiki.apache.org/hadoop/Running_Hadoop_On_OS_X_10.5<em>64-bit</em>(Single-Node_Cluster)
+https://wiki.apache.org/hadoop/Hadoop2OnWindows</p>
+  </li>
+  <li>
+    <p>Spark setup on Mac, Linux and Windows:
+You can refer to the thread in StackOver
+http://stackoverflow.com/questions/25481325/how-to-set-up-spark-on-windows
+https://shellzero.wordpress.com/2015/07/24/how-to-install-apache-spark-on-mac-os-x-yosemite/</p>
+  </li>
+  <li>
+    <p>Spark and Hadoop in Amazon EC2
+https://wiki.apache.org/hadoop/AmazonEC2
+http://spark.apache.org/docs/latest/ec2-scripts.html</p>
+  </li>
+</ul>
+
+<h2>3.3 Run Spark on the command line</h2>
+
+<p>Actually running Spark with python file (xxx.py) is similar to how you run your Python files with python xxx.py), you just run the following command:</p>
+
+<p><code class="language-plaintext highlighter-rouge">$ spark-submit xxx.py # Runs the Spark file xxx.py</code></p>
+
+<p>If your Spark file takes in arguments (much like the Spark files we have provided), the command will be similar, but you will instead add however any arguments that you need, like:</p>
+
+<p><code class="language-plaintext highlighter-rouge">$ spark-submit xxx.py arg1 arg2 # Runs the Spark file xxx.py and passes in arg1 and arg2 to xxx.py</code></p>
+
+<p>Spark also includes this neat interpreter that runs with Python 2.7.3 and will let you test out any of your Spark commands right in the interpreter! The command is as follows:</p>
+
+<p><code class="language-plaintext highlighter-rouge">$ pyspark # Runs the Spark interpreter.</code></p>
+
+<p>If you want to preload some files (say a.py, b.py, c.py), you can run the following command:</p>
+
+<p><code class="language-plaintext highlighter-rouge">$ pyspark --py-files a.py, b.py, c.py # Runs the Spark interpreter and you can now import stuff from a, b, and c</code></p>
+
+<h2>3.4 Practices</h2>
+
+<h4>Ex1 – Generating the dataset</h4>
+
+<p>The fundamental idea we want to use WSC’s power through MapReduce framework is that we may have a huge workload that could be consumed couple days, months or even years to finish by using only one machine. Therefore, before starting to code the own map and reduce function, we need dataset.</p>
+
+<p>In the examples, we’ll be working heavily with textual data and have some pre-generated datasets but it’s always more fun to use a dataset that you find interesting.</p>
+
+<p>So this section, I’ll teach you guys how to generate the dataset from Project Gutenberg (a database of public-domain literary works) step by step.</p>
+
+<p>I’ve put the code used in the following examples and data into my GitHub, Feel free to download from <a href="https://github.com/paulyang0125/WSC_MapReduce-Spark">WSC_MapReduce-Spark</a></p>
+
+<ol>
+  <li>Head over to Project <a href="http://www.gutenberg.org/wiki/Main_Page">Gutenberg</a>, pick a work of your choosing, and download the “Plain Text UTF-8” version into your lab directory. In this case, I pick EBook of Little Dorrit, by Charles Dickens in Figure4</li>
+</ol>
+
+<p><img src="/assets/img/part3.4.png" alt="sample image" /></p>
+
+<p>Figure4 EBook of Little Dorrit</p>
+
+<p><br /></p>
+
+<ol>
+  <li>Open up the file you downloaded in your favorite text editor and insert “—END.OF.DOCUMENT—” (without the quotes) by itself on a new line wherever you want Hadoop to split the input file into separate (key, value) pairs. The importer we’re using will assign an arbitrary key (like “doc_xyz”) and the value will be the contents of our input file between two “—END.OF.DOCUMENT—” markers.</li>
+</ol>
+
+<p><img src="/assets/img/part3.5.png" alt="sample image" /></p>
+
+<p>Figure5 insert “—END.OF.DOCUMENT—” in EBook</p>
+
+<ol>
+  <li>
+    <p>The importer is actually a MapReduce program which is used to convert TXT files into a Hadoop sequence file (the .seq extension). These are NOT human-readable. You can take a look at Importer.java if you want, but the implementation details aren’t important for this section.</p>
+  </li>
+  <li>
+    <p>We need to build out our importer JAR first by the following command in the console (in my folder, I’ve got these files, WordCount.java, pg963.txt, DocWordCount.java Importer.java and a folder /data/ and notice the paths of hadoop-core.jar and commons-cli.jar depend on your local installation.</p>
+  </li>
+</ol>
+
+<p><code class="language-plaintext highlighter-rouge">javac -g -deprecation –cp /paul/hadoop/hadoop-core.jar:/paul/hadoop/lib/commons-cli.jar *.java jar cf wc.jar -C classe . </code></p>
+
+<ol>
+  <li>Now you can generate your input file like so:</li>
+</ol>
+
+<p><code class="language-plaintext highlighter-rouge">hadoop jar wc.jar Importer YOUR_FILE_FROM_STEP_2.txt</code></p>
+
+<ol>
+  <li>Your generated .seq file can now be found in the convertedOut directory</li>
+</ol>
+
+<p><img src="/assets/img/part3.6.png" alt="sample image" /></p>
+
+<p>Figure6 convertedOut directory</p>
+
+<h4>Ex2 – Running Word Count</h4>
+
+<p>Here we use the common-seen example word. Open WordCount.java you will see the codes adapted from the http://wiki.apache.org/hadoop/WordCountHadoopwiki</p>
+
+<p>What here basically do is to define mapper class – WordCountMap and reducer class – SumReduce, and then create a job object to represent a wordcount Job and tell Hadoop where to locate the code that must be shipped if this job is to be run across a cluster. And then set all the required tasks and parameters before we start, such as datatypes of the keys and values outputted by the maps and reduces and set the mapper, combiner, reducer to use. You can see the comments in the following code snippet for more info.</p>
+
+<p>Code snippet of WordCount.java:</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">WordCountMap</span> <span class="kd">extends</span> <span class="nc">Mapper</span> <span class="o">{</span>
+        <span class="cm">/** Regex pattern to find words (alphanumeric + _). */</span>
+        <span class="kd">final</span> <span class="kd">static</span> <span class="nc">Pattern</span> <span class="no">WORD_PATTERN</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"\\w+"</span><span class="o">);</span>
+
+        <span class="cm">/** Constant 1 as a LongWritable value. */</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="nc">LongWritable</span> <span class="no">ONE</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">LongWritable</span><span class="o">(</span><span class="mi">1L</span><span class="o">);</span>
+
+        <span class="cm">/** Text object to store a word to write to output. */</span>
+        <span class="kd">private</span> <span class="nc">Text</span> <span class="n">word</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Text</span><span class="o">();</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">map</span><span class="o">(</span><span class="nc">Text</span> <span class="n">key</span><span class="o">,</span> <span class="nc">Text</span> <span class="n">value</span><span class="o">,</span> <span class="nc">Context</span> <span class="n">context</span><span class="o">)</span>
+                <span class="kd">throws</span> <span class="nc">IOException</span><span class="o">,</span> <span class="nc">InterruptedException</span> <span class="o">{</span>
+            <span class="nc">Matcher</span> <span class="n">matcher</span> <span class="o">=</span> <span class="no">WORD_PATTERN</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">value</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">matcher</span><span class="o">.</span><span class="na">find</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">word</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">matcher</span><span class="o">.</span><span class="na">group</span><span class="o">());</span>
+                <span class="n">context</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">word</span><span class="o">,</span> <span class="no">ONE</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SumReduce</span> <span class="kd">extends</span> <span class="nc">Reducer</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">reduce</span><span class="o">(</span><span class="nc">Text</span> <span class="n">key</span><span class="o">,</span> <span class="nc">Iterable</span> <span class="n">values</span><span class="o">,</span>
+                <span class="nc">Context</span> <span class="n">context</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span><span class="o">,</span> <span class="nc">InterruptedException</span> <span class="o">{</span>
+            <span class="kt">long</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0L</span><span class="o">;</span>
+            <span class="k">for</span> <span class="o">(</span><span class="nc">LongWritable</span> <span class="n">value</span> <span class="o">:</span> <span class="n">values</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">sum</span> <span class="o">+=</span> <span class="n">value</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+            <span class="o">}</span>
+            <span class="n">context</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="k">new</span> <span class="nc">LongWritable</span><span class="o">(</span><span class="n">sum</span><span class="o">));</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">rawArgs</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+        <span class="cm">/* Use Hadoop's GenericOptionsParser, so our MapReduce program can accept
+         * common Hadoop options.
+         */</span>
+        <span class="nc">GenericOptionsParser</span> <span class="n">parser</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">GenericOptionsParser</span><span class="o">(</span><span class="n">rawArgs</span><span class="o">);</span>
+        <span class="nc">Configuration</span> <span class="n">conf</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="na">getConfiguration</span><span class="o">();</span>
+        <span class="nc">String</span><span class="o">[]</span> <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="na">getRemainingArgs</span><span class="o">();</span>
+
+        <span class="cm">/* Create an object to represent a Job. */</span>
+        <span class="nc">Job</span> <span class="n">job</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Job</span><span class="o">(</span><span class="n">conf</span><span class="o">,</span> <span class="s">"wordcount"</span><span class="o">);</span>
+
+        <span class="cm">/* Tell Hadoop where to locate the code that must be shipped if this
+         * job is to be run across a cluster. Unless the location of code
+         * is specified in some other way (e.g. the -libjars command line
+         * option), all non-Hadoop code required to run this job must be
+         * contained in the JAR containing the specified class (WordCountMap
+         * in this case).
+         */</span>
+        <span class="n">job</span><span class="o">.</span><span class="na">setJarByClass</span><span class="o">(</span><span class="nc">WordCountMap</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+        <span class="cm">/* Set the datatypes of the keys and values outputted by the maps and reduces.
+         * These must agree with the types used by the Mapper and Reducer. Mismatches
+         * will not be caught until runtime.
+         */</span>
+        <span class="n">job</span><span class="o">.</span><span class="na">setMapOutputKeyClass</span><span class="o">(</span><span class="nc">Text</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">job</span><span class="o">.</span><span class="na">setMapOutputValueClass</span><span class="o">(</span><span class="nc">LongWritable</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">job</span><span class="o">.</span><span class="na">setOutputKeyClass</span><span class="o">(</span><span class="nc">Text</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">job</span><span class="o">.</span><span class="na">setOutputValueClass</span><span class="o">(</span><span class="nc">LongWritable</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+        <span class="cm">/* Set the mapper, combiner, reducer to use. These reference the classes defined above. */</span>
+        <span class="n">job</span><span class="o">.</span><span class="na">setMapperClass</span><span class="o">(</span><span class="nc">WordCountMap</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">job</span><span class="o">.</span><span class="na">setReducerClass</span><span class="o">(</span><span class="nc">SumReduce</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+        <span class="cm">/* Set the format to expect input in and write output in. The input files we have
+         * provided are in Hadoop's "sequence file" format, which allows for keys and
+         * values of arbitrary Hadoop-supported types and supports compression.
+         *
+         * The output format TextOutputFormat outputs each key-value pair as a line
+         * "keyvalue".
+         */</span>
+        <span class="n">job</span><span class="o">.</span><span class="na">setInputFormatClass</span><span class="o">(</span><span class="nc">SequenceFileInputFormat</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">job</span><span class="o">.</span><span class="na">setOutputFormatClass</span><span class="o">(</span><span class="nc">TextOutputFormat</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+        <span class="cm">/* Specify the input and output locations to use for this job. */</span>
+        <span class="nc">FileInputFormat</span><span class="o">.</span><span class="na">addInputPath</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Path</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">]));</span>
+        <span class="nc">FileOutputFormat</span><span class="o">.</span><span class="na">setOutputPath</span><span class="o">(</span><span class="n">job</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Path</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">1</span><span class="o">]));</span>
+
+        <span class="cm">/* Submit the job and wait for it to finish. The argument specifies whether
+         * to print progress information to output. (true means to do so.)
+         */</span>
+        <span class="n">job</span><span class="o">.</span><span class="na">waitForCompletion</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>Now, we can see the result by compile and package the .java source file into a .jar and then run it on our desired input (we use pre-built data as example - data/billOfRights.txt.seq but you can replace it with your seg file).</p>
+
+<p><code class="language-plaintext highlighter-rouge">hadoop jar wc.jar WordCount data/billOfRights.txt.seq wc-out-wordcount-small</code></p>
+
+<p>This will run WordCount over billOfRights.txt.seq. Your output should be visible in wc-out-wordcount-small/part-r-00000. If we had used multiple reduces, the output would be split across part-r-[id.num], where Reducer “id.num” outputs to the corresponding file. The key-value pair for your Map tasks is a document identifier and the actual document text.</p>
+
+<p><img src="/assets/img/part3.7.png" alt="sample image" /></p>
+
+<p>Figure7 the result of word count over billOfRights.txt.seq in part-r-00000.</p>
+
+<p>For simplifying the compiling process, we create a Makefile. Instead, you can just run the following make command for the same result as above.</p>
+
+<p><code class="language-plaintext highlighter-rouge">$ make wordcount-small</code></p>
+
+<p>Next, try your code on the larger input file complete-works-mark-twain.txt.seq. In general, Hadoop requires that the output directory not exist when a MapReduce job is executed, however our Makefile takes care of this by removing our old output directory.</p>
+
+<h4>Ex3 – Document Word Count</h4>
+
+<p>Now is you turn to play around MapReduce. Open DocWordCount.java. Notice that it currently contains the same code as WordCount.java (but with modified class names), which you just compiled and tried for yourself. Modify it to count the number of documents containing each word rather than the number of times each word occurs in the input - for example, the word “Affery” appears in six documents rather than 66 times of occurrence in the all documents.</p>
+
+<p>Academy  1
+Affairs      2
+Affery       6
+After 10
+Again        3</p>
+
+<p>Code snippet of DocWordCount.java:</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">map</span><span class="o">(</span><span class="nc">Text</span> <span class="n">key</span><span class="o">,</span> <span class="nc">Text</span> <span class="n">value</span><span class="o">,</span> <span class="nc">Context</span> <span class="n">context</span><span class="o">)</span>
+                <span class="kd">throws</span> <span class="nc">IOException</span><span class="o">,</span> <span class="nc">InterruptedException</span> <span class="o">{</span>
+
+            <span class="cm">/* MODIFY THE BELOW CODE */</span>
+
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SumReduce</span> <span class="kd">extends</span> <span class="nc">Reducer</span> <span class="o">{</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">reduce</span><span class="o">(</span><span class="nc">Text</span> <span class="n">key</span><span class="o">,</span> <span class="nc">Iterable</span> <span class="n">values</span><span class="o">,</span>
+                <span class="nc">Context</span> <span class="n">context</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span><span class="o">,</span> <span class="nc">InterruptedException</span> <span class="o">{</span>
+
+  <span class="cm">/* MODIFY THE BELOW CODE */</span>
+
+        <span class="o">}</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>You can test DocWordCount using either of the following (for our two data sets):</p>
+
+<p><code class="language-plaintext highlighter-rouge">$ make docwordcount-small  # Output in wc-out-docwordcount-small/</code></p>
+
+<p>OR</p>
+
+<p><code class="language-plaintext highlighter-rouge">$ make docwordcount-medium # Output in wc-out-wordcount-medium/</code></p>
+
+<h4>Ex4 –Working with Spark</h4>
+
+<p>Now that you have gained some familiarity with the MapReduce paradigm, we will shift gears into Spark and investigate how to do what we did in the previous exercise in Spark! I have provided a complete <a href="https://github.com/paulyang0125/WSC_MapReduce-Spark/blob/master/wordcount.py">wordcount.py</a>, to get you a bit more familiar with how Spark works. To help you with understanding the code, I have added some comments, but feel free to check out transformations and actions on the Spark website for a more detailed explanation on some of the methods that can be used in Spark.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">wordcount</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s">"spark-wc-out-wordcount"</span><span class="p">):</span>
+    <span class="n">sc</span> <span class="o">=</span> <span class="n">SparkContext</span><span class="p">(</span><span class="s">"local[8]"</span><span class="p">,</span> <span class="s">"WordCount"</span><span class="p">)</span>
+    <span class="s">""" Reads in a sequence file FILE_NAME to be manipulated """</span>
+    <span class="nb">file</span> <span class="o">=</span> <span class="n">sc</span><span class="p">.</span><span class="n">sequenceFile</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+
+    <span class="s">"""
+    - flatMap takes in a function that will take one input and outputs 0 or more
+      items
+    - map takes in a function that will take one input and outputs a single item
+    - reduceByKey takes in a function, groups the dataset by keys and aggregates
+      the values of each key
+    """</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="nb">file</span><span class="p">.</span><span class="n">flatMap</span><span class="p">(</span><span class="n">flat_map</span><span class="p">)</span> \
+                 <span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="nb">map</span><span class="p">)</span> \
+                 <span class="p">.</span><span class="n">reduceByKey</span><span class="p">(</span><span class="nb">reduce</span><span class="p">)</span>
+
+    <span class="s">""" Takes the dataset stored in counts and writes everything out to OUTPUT """</span>
+    <span class="n">counts</span><span class="p">.</span><span class="n">coalesce</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">saveAsTextFile</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></code></pre></figure>
+
+<p>To get you started on implementing DocWordCount.java in Spark, we have provided a skeleton file docwordcount.py.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">flat_map</span><span class="p">(</span><span class="n">document</span><span class="p">):</span>
+    <span class="s">"""
+    Takes in document, which is a key, value pair, where document[0] is the
+    document ID and document[1] is the contents of the document.
+    """</span>
+    <span class="s">""" Your code here. """</span>
+    <span class="k">return</span> <span class="n">re</span><span class="p">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s">"\w+"</span><span class="p">,</span> <span class="n">document</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+    <span class="s">""" Your code here. """</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">reduce</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
+    <span class="s">""" Your code here. """</span>
+    <span class="k">return</span> <span class="n">arg1</span></code></pre></figure>
+
+<p>To test your docwordcount.py, you can run either of the following two commands:</p>
+
+<p><code class="language-plaintext highlighter-rouge">$ make sparkdwc-small  # Output in spark-wc-out-docwordcount-small/</code></p>
+
+<p>OR</p>
+
+<p><code class="language-plaintext highlighter-rouge">$ make sparkdwc-medium # Output in spark-wc-out-docwordcount-medium/</code></p>
+
+<h4>Ex5 – Working with Spark</h4>
+
+<p>Open index.py. Notice that the code is similar to docwordcount.py. Modify it to output every word and a list of locations (document identifier followed by the word index of EACH time that word appears in that document). Make sure your word indices start at zero. Your output should have lines that look like the following:</p>
+
+<p>(word1      document1-id, word# word# …)
+(word1      document2-id, word# word# …)
+. . .
+(word2      document1-id, word# word# …)
+(word2      document3-id, word# word# …)
+. . .
+Notice that there will be a line of output for EACH document in which that word appears and EACH word and document pair should only have ONE list of indices. Remember that you need to also keep track of the document ID as well.</p>
+
+<p>For this exercise, you may not need all the functions we have provided. If a function is not used, feel free to remove the method that is trying to call it. Make sure your output for this is sorted as well (just like in the previous exercise.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">flat_map</span><span class="p">(</span><span class="n">document</span><span class="p">):</span>
+    <span class="s">"""
+    Takes in document, which is a key, value pair, where document[0] is the
+    document ID and document[1] is the contents of the document.
+    HINT: You need to keep track of three things, word, document ID, and the
+    index inside of the document, but you are working with key, value pairs.
+    Is there a way to combine these three things and make a key, value pair?
+    """</span>
+    <span class="s">""" Your code here. """</span>
+    <span class="k">return</span> <span class="n">re</span><span class="p">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s">"\w+"</span><span class="p">,</span> <span class="n">document</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+    <span class="s">""" Your code here. """</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">reduce</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
+    <span class="s">""" Your code here. """</span>
+    <span class="k">return</span> <span class="n">arg1</span></code></pre></figure>
+
+<p>You can test index.py by using either of the following commands (for our two datasets):</p>
+
+<p><code class="language-plaintext highlighter-rouge">$ make index-small # Output in spark-wc-out-index-small/</code></p>
+
+<p>OR</p>
+
+<p><code class="language-plaintext highlighter-rouge">$ make index-medium # Output in spark-wc-out-index-medium/</code></p>
+
+<p>The output from running make index-medium will be a large file. In order to more easily look at its contents, you can use the commands cat, head, more, and grep:</p>
+
+<p><code class="language-plaintext highlighter-rouge">$ head -25 OUTPUTFILE       # view the first 25 lines of output</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">$ cat OUTPUTFILE | more     # scroll through output one screen at a time (use Space)</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">$ cat OUTPUTFILE | grep the # output only lines containing 'the' (case-sensitive)</code></p>
+
+<h2>3.3 Solution</h2>
+
+<p>I put all the solutions for the examples above in the folder named <a href="https://github.com/paulyang0125/WSC-MapReduce-Spark/tree/master/solutions">solutions here</a>.</p>
+
+<p>let me know if you have any other further questions.</p>
+
+  </section>
+</div>
+
+<div id="top" class="top-btn" onclick="moveTop()">
+  <i class="fas fa-chevron-up"></i>
+</div>
+
+<script>
+  var lastScrollTop = 0;
+  window.onscroll = function () {
+    var st = document.body.scrollTop || document.documentElement.scrollTop;
+    if (st > 250) {
+      document.getElementById("top").style.display = "block"
+      if (st > lastScrollTop) {
+        document.getElementById("top").style.opacity = 0
+      } else {
+        document.getElementById("top").style.opacity = 1
+      }
+    } else {
+      document.getElementById("top").style.opacity = 0
+      if (st > lastScrollTop) {
+        document.getElementById("top").style.display = "none"
+      }
+    }
+    lastScrollTop = st <= 0 ? 0 : st;
+  }
+  function moveTop() {
+    document.body.scrollTop = 0
+    document.documentElement.scrollTop = 0
+  }
+</script>
+
+<!-- Footer -->
+<footer>
+  <div class="footer">
+    Copyright © 2022
+    <a href=""></a>.
+    Powered by Jekyll with
+    <a href="https://github.com/chrjabs/Grape-Academic-Theme">Grape Academic Theme</a>.
+  </div>
+</footer>
+
+  </div>
+</body>
+
+</html>
